@@ -72,7 +72,6 @@ passport.deserializeUser(async (id, done) => {
   const [rows] = await db.query("SELECT * FROM users WHERE id=?", [id]);
   done(null, rows[0]);
 });
-console.log("Callback URL:", "http://localhost:5000/api/auth/google/callback");
 passport.use(
   new GoogleStrategy(
     {
