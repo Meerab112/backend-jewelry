@@ -29,7 +29,11 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: [
+      "https://frontend-jewelry-3k34.vercel.app",
+      "http://localhost:5173",
+      "http://localhost:3000",
+    ],
     credentials: true,
   }),
 );
