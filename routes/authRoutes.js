@@ -301,32 +301,27 @@ router.post("/logout", (req, res) => {
 });
 //google
 console.log("GOOGLE ROUTES LOADED");
-router.get(
-  "/google",
+router.get("/google", (req, res, next) => {
+  const redirectTo = req.query.redirectTo || "/";
+  req.session.redirectTo = redirectTo;
   passport.authenticate("google", {
     scope: ["profile", "email"],
-  }),
-);
+  })(req, res, next);
+});
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", {
-    session: false,
-  }),
+  passport.authenticate("google", { session: false }),
   (req, res) => {
     const token = jwt.sign(
-      {
-        id: req.user.id,
-        email: req.user.email,
-        role: req.user.role,
-      },
+      { id: req.user.id, email: req.user.email, role: req.user.role },
       JWT_SECRET,
-      {
-        expiresIn: JWT_EXPIRES_IN,
-      },
+      { expiresIn: JWT_EXPIRES_IN },
     );
-
-    res.redirect(`http://localhost:5173/login-success?token=${token}`);
+    const redirectTo = req.session.redirectTo || "/";
+    res.redirect(
+      `https://frontend-jewelry-9pe5.vercel.app/login-success?token=${token}&redirectTo=${encodeURIComponent(redirectTo)}`,
+    );
   },
 );
 //testing
